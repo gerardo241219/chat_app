@@ -15,11 +15,9 @@ io.on("connection", socket => {
     });
 });
 
-const getApi = (socket, usuario_id) => {
-    setInterval( async () => {
-        const res = await axios.get("https://chatwa.gpoptima.info/api-nuevosLeads?usuario=" + usuario_id);
-        socket.emit("respuesta nuevosLeads", res.data.data);
-    }, 5000);
+const getApi = async (socket, usuario_id) => {
+    const res = await axios.get("https://chatwa.gpoptima.info/api-nuevosLeads?usuario=" + usuario_id);
+    socket.emit("respuesta nuevosLeads", res.data.data);
 }
 
 server.listen(3000, () => console.log("Server running on"));

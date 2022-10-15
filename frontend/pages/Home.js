@@ -10,26 +10,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({ navigation }) => {
 
-  const socket = io('http://192.168.1.76:3000');
+    const socket = io('http://192.168.1.76:3000');
 
-  const [usuario_id, set_usuario_id] = useState("");
-  const [leads, setLeads] = useState([]);
+    const [usuario_id, set_usuario_id] = useState("");
+    const [leads, setLeads] = useState([]);
 
-  useEffect(() => {
+    const getData = async () => {
+        set_usuario_id(await AsyncStorage.getItem('@sesion_usuario_id'));
+    }
+
     getData();
 
-    socket.on('connect', () => {
-      socket.emit('chat message', usuario_id);
-    })
-  }, []);
+    useEffect(() => {
+        if(usuario_id != "") {
+            socket.on('connect', () => {
+                setInterval(() => {
+                    socket.emit('chat message', usuario_id);
+                    alert('Adios');
+                },5000);
+            })
+        }
+    }, [usuario_id]);
 
-  socket.on('respuesta nuevosLeads', data => {
-   setLeads(data);
-  });
-
-  const getData = async () => {
-    set_usuario_id(await AsyncStorage.getItem('@sesion_usuario_id'));
-  }
+    socket.on('respuesta nuevosLeads', data => {
+        setLeads(data);
+    });
 
     return (
         <View style={styles.container}>
@@ -46,11 +51,11 @@ const Home = ({ navigation }) => {
                     </TouchableOpacity>
                 }
             />
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={styles.btnFloat}
                 onPress={() => navigation.navigate('Chats')}
             >
-                <Image source={iconMessage} style={styles.iconMessage}/>
+                <Image source={iconMessage} style={styles.iconMessage} />
             </TouchableOpacity>
         </View>
     )
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
     },
     lista: {
         marginTop: 20,
-    },  
+    },
     containerList: {
         flexDirection: 'row',
         alignContent: 'center',
