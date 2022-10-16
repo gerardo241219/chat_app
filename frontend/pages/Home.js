@@ -26,8 +26,7 @@ const Home = ({ navigation }) => {
             socket.on('connect', () => {
                 setInterval(() => {
                     socket.emit('chat message', usuario_id);
-                    alert('Adios');
-                },5000);
+                },1000);
             })
         }
     }, [usuario_id]);
@@ -36,12 +35,19 @@ const Home = ({ navigation }) => {
         setLeads(data);
     });
 
+    const handleChat = (id, nombre) => {
+        alertInfo('Importante', 'Antes de continuar recuerda que debes comenzar tu conversación con una plantilla.')
+        navigation.navigate('Chat', { lead: [id, nombre] });
+    }  
+
     return (
         <View style={styles.container}>
             <FlatList style={styles.lista}
                 data={leads}
                 renderItem={({ item }) =>
-                    <TouchableOpacity style={styles.containerList}>
+                    <TouchableOpacity 
+                        style={styles.containerList}
+                        onPress={() => handleChat(item.lead_id, item.lead_nombre)}>
                         <Image source={iconUser} style={styles.iconUser} />
                         <View style={styles.containerDescription}>
                             <Text style={styles.item}>{item.lead_nombre}</Text>
@@ -74,12 +80,12 @@ const styles = StyleSheet.create({
     containerList: {
         flexDirection: 'row',
         alignContent: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 30,
+        paddingVertical: 10,
+        paddingHorizontal: 5,
         marginTop: 10,
     },
     containerDescription: {
-        marginLeft: 15
+        marginLeft: 5
     },
     item: {
         fontSize: 18,
@@ -92,6 +98,7 @@ const styles = StyleSheet.create({
     iconUser: {
         width: 50,
         height: 50,
+        marginTop: 5
     },
     btnFloat: {
         position: 'absolute',

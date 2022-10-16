@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Login from './../pages/Login';
 import Home from "./../pages/Home";
 import Chats from "./../pages/Chats";
+import Chat from "../pages/Chat";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +43,12 @@ const MainStack = () => {
                     name="Chats"
                     component={Chats}
                     options={optionsHeader('Leads Activos')}
+                />
+
+                <Stack.Screen
+                    name="Chat"
+                    component={Chat}
+                    options={optionsHeader('Chat')}
                 />
 
             </Stack.Navigator>
