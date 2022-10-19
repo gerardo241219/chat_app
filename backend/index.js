@@ -13,11 +13,20 @@ io.on("connection", socket => {
     socket.on('chat message', (usuario_id) => {
         getApi(socket, usuario_id);
     });
+
+    socket.on('chat listMessages', (lead_id) => {
+        getMessages(socket, lead_id);
+    });
 });
 
 const getApi = async (socket, usuario_id) => {
     const res = await axios.get("https://chatwa.gpoptima.info/api-nuevosLeads?usuario=" + usuario_id);
     socket.emit("respuesta nuevosLeads", res.data.data);
+}
+
+const getMessages = async (socket, lead_id) => {
+    const res = await axios.get("https://chatwa.gpoptima.info/api-listMessages?lead=" + lead_id);
+    socket.emit("respuesta listMessages", res.data.data);
 }
 
 server.listen(3000, () => console.log("Server running on"));
