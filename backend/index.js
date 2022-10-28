@@ -17,6 +17,18 @@ io.on("connection", socket => {
     socket.on('chat listMessages', (lead_id) => {
         getMessages(socket, lead_id);
     });
+
+    socket.on('chat sendMessage', (idUsuario, idSucursal, lead, mensaje, tipo) => {
+        sendMessage(idUsuario, idSucursal, lead, mensaje, tipo);
+    });
+
+    socket.on('chat listPlantillas', () => {
+        getPlantillas(socket);
+    });
+
+    socket.on('chat sendPlantilla', (idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje) => {
+        sendPlantilla(idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje);
+    });
 });
 
 const getApi = async (socket, usuario_id) => {
@@ -27,6 +39,19 @@ const getApi = async (socket, usuario_id) => {
 const getMessages = async (socket, lead_id) => {
     const res = await axios.get("https://chatwa.gpoptima.info/api-listMessages?lead=" + lead_id);
     socket.emit("respuesta listMessages", res.data.data);
+}
+
+const getPlantillas = async (socket) => {
+    const res = await axios.get("https://chatwa.gpoptima.info/api-listPlantillas");
+    socket.emit("respuesta listPlantillas", res.data.data);
+}
+
+const sendMessage = async (idUsuario, idSucursal, lead, mensaje, tipo) => {
+    const res = await axios.get("https://chatwa.gpoptima.info/api-sendMessage?usuario=" + idUsuario + "&sucursal=" + idSucursal + "&lead=" + lead + "&mensaje=" + mensaje + "&tipo=" + tipo);
+}
+
+const sendPlantilla = async (idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje) => {
+    const res = await axios.get("https://chatwa.gpoptima.info/api-sendPlantilla?usuario=" + idUsuario + "&sucursal=" + idSucursal + "&lead=" + idLead + "&plantilla=" + idPlantillla + "&tipo=" + tipoMensaje);
 }
 
 server.listen(3000, () => console.log("Server running on"));
