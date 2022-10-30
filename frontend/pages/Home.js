@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({ navigation }) => {
 
-    const socket = io('http://192.168.1.76:3000');
+    const socket = io('http://192.168.1.85:3000');
 
     const [usuario_id, set_usuario_id] = useState("");
     const [leads, setLeads] = useState([]);

@@ -29,6 +29,14 @@ io.on("connection", socket => {
     socket.on('chat sendPlantilla', (idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje) => {
         sendPlantilla(idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje);
     });
+
+    socket.on('chat sendEmail', (idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje) => {
+        sendEmail(idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje);
+    });
+
+    socket.on('chat sendCierre', (idUsuario, idLead, motivo) => {
+        sendCierre(socket, idUsuario, idLead, motivo);
+    });
 });
 
 const getApi = async (socket, usuario_id) => {
@@ -51,7 +59,16 @@ const sendMessage = async (idUsuario, idSucursal, lead, mensaje, tipo) => {
 }
 
 const sendPlantilla = async (idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje) => {
-    const res = await axios.get("https://chatwa.gpoptima.info/api-sendPlantilla?usuario=" + idUsuario + "&sucursal=" + idSucursal + "&lead=" + idLead + "&plantilla=" + idPlantillla + "&tipo=" + tipoMensaje);
+    const res = await axios.get(`https://chatwa.gpoptima.info/api-sendPlantilla?usuario=${idUsuario}&sucursal=${idSucursal}&lead=${idLead}&plantilla=${idPlantillla}&tipo=${tipoMensaje}`);
+}
+
+const sendEmail = async (idUsuario, idSucursal, idLead, idPlantillla, tipoMensaje) => {
+    const res = await axios.get(`https://chatwa.gpoptima.info/api-sendEmail?usuario=${idUsuario}&sucursal=${idSucursal}&lead=${idLead}&plantilla=${idPlantillla}&tipo=${tipoMensaje}`);
+}
+
+const sendCierre = async (socket, idUsuario, idLead, motivo) => {
+    const res = await axios.get(`https://chatwa.gpoptima.info/api-sendCierre?usuario=${idUsuario}&lead=${idLead}&motivo=${motivo}`);
+    socket.emit("respuesta sendCierre", res.data.message);
 }
 
 server.listen(3000, () => console.log("Server running on"));
